@@ -9,10 +9,10 @@ import com.example.agencia_viagens.entity.Destination;
 @Service
 public class DestinationService {
 
-    private ArrayList<Destination> destinos = new ArrayList<Destination>();
+    private ArrayList<Destination> destinations = new ArrayList<Destination>();
 
-    public Destination save(Destination destino) {
-        destinos.add(destino);
-        return destino;
+    public Destination save(Destination destination) {
+        destinations.add(destination);
+        return destination;
     }
 }

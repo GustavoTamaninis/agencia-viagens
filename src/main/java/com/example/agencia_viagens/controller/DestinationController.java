@@ -12,15 +12,15 @@ import com.example.agencia_viagens.entity.Destination;
 import com.example.agencia_viagens.service.DestinationService;
 
 @RestController
-@RequestMapping("/api/destinos")
+@RequestMapping("/api/destinations")
 public class DestinationController {
 
     @Autowired
     private DestinationService destinationService;
 
     @PostMapping
-    public ResponseEntity<Destination> cadastrar(@RequestBody Destination destino) {
-        Destination salvo = destinationService.save(destino);
-        return new ResponseEntity<Destination>(salvo, HttpStatus.CREATED);
+    public ResponseEntity<Destination> createDestination(@RequestBody Destination destination) {
+        Destination saved = destinationService.save(destination);
+        return new ResponseEntity<Destination>(saved, HttpStatus.CREATED);
     }
 }
