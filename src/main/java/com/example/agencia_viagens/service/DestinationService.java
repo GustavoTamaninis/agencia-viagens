@@ -16,6 +16,11 @@ public class DestinationService {
         return this.destinations;
     }
 
+    public Destination getDestinationById(Long id){
+        Destination destination = destinations.stream().filter(d -> d.getId() == id).findFirst().get();
+        return destination;
+    }
+
     public Destination save(Destination destination) {
         destinations.add(destination);
         return destination;

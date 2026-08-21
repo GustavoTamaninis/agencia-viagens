@@ -3,6 +3,7 @@ package com.example.agencia_viagens.entity;
 import java.util.List;
 
 public class Destination {
+    private Long id;
     private String name;
     private String locate;
     private String travelPackets;
@@ -10,6 +11,14 @@ public class Destination {
     private String description;
     private String touristActivities;
     private List<String> reviews; // Usamos uma Lista, porque Arrays no Java não são dinâmicos.
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

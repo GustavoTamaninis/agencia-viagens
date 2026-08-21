@@ -9,6 +9,7 @@ import com.example.agencia_viagens.entity.Destination;
 import com.example.agencia_viagens.service.DestinationService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/destinations")
@@ -21,6 +22,12 @@ public class DestinationController {
     public ResponseEntity<List<Destination>> getAllDestinations(){
         List<Destination> destinations = destinationService.getAllDestinations();
         return new ResponseEntity<>(destinations, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Destination> getDestinationById(@PathVariable Long id){ // visualizar detalhes de um destino específico
+        Destination destination = destinationService.getDestinationById(id);
+        return new ResponseEntity<>(destination, HttpStatus.OK);
     }
 
     @PostMapping
