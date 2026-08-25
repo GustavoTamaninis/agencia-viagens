@@ -9,7 +9,7 @@ import com.example.agencia_viagens.entity.Destination;
 import com.example.agencia_viagens.service.DestinationService;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/destinations")
@@ -33,6 +33,24 @@ public class DestinationController {
     @PostMapping
     public ResponseEntity<Destination> createDestination(@RequestBody Destination destination) {
         Destination saved = destinationService.save(destination);
-        return new ResponseEntity<Destination>(saved, HttpStatus.CREATED);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Destination> updateDestination(@PathVariable Long id, @RequestBody Destination destination) {
+    Destination updated = destinationService.updateDestination(id, destination);
+        if (updated == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updated, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/reviews")
+    public ResponseEntity<Destination> addReview(@PathVariable Long id, @RequestBody String rating) {
+        Destination updated = destinationService.addReview(id, rating);
+        if (updated == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 }

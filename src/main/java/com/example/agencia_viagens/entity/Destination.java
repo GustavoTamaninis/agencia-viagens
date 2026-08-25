@@ -1,7 +1,7 @@
 package com.example.agencia_viagens.entity;
 
 import java.util.List;
-
+@SuppressWarnings("unused")
 public class Destination {
     private Long id;
     private String name;
@@ -74,5 +74,34 @@ public class Destination {
 
     public void setReviews(List<String> reviews) {
         this.reviews = reviews;
+    }
+
+    // Dentro da classe Destination.java
+
+    public Double getAverage() {
+        if (this.reviews == null || this.reviews.isEmpty()) {
+            return 0.0;
+        }
+
+        double sum = 0.0;
+        int count = 0;
+
+        for (String reviewStr : this.reviews) {
+            if (reviewStr != null && !reviewStr.trim().isEmpty()) {
+                try {
+                    sum += Double.parseDouble(reviewStr.trim());
+                    count++;
+                } catch (NumberFormatException e) {
+                    // Ignora valores inválidos
+                }
+            }
+        }
+
+        if (count == 0) {
+            return 0.0;
+        }
+
+        double average = sum / count;
+        return Math.round(average * 100.0) / 100.0;
     }
 }
