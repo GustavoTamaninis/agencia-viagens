@@ -1,6 +1,8 @@
 package com.example.agencia_viagens.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
+
 @SuppressWarnings("unused")
 public class Destination {
     private Long id;
@@ -76,6 +78,7 @@ public class Destination {
         this.reviews = reviews;
     }
 
+    @JsonProperty("average")
     public Double getAverage() {
         if (this.reviews == null || this.reviews.isEmpty()) {
             return 0.0;
