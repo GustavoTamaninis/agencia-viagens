@@ -44,7 +44,7 @@ public class DestinationService {
         return destination;
     }
 
-    public Destination addReview(Long id, String rating) {
+    public Destination addReview(Long id, Double rating) {
         Destination destination = getDestinationById(id);
 
         if (destination != null && rating != null) {
@@ -52,8 +52,7 @@ public class DestinationService {
                 destination.setReviews(new ArrayList<>());
             }
 
-            String cleanRating = rating.replace("\"", "").trim();
-            destination.getReviews().add(cleanRating);
+            destination.getReviews().add(rating);
         }
 
         return destination;

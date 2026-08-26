@@ -46,7 +46,7 @@ public class DestinationController {
     }
 
     @PutMapping("/{id}/reviews")
-    public ResponseEntity<Destination> addReview(@PathVariable Long id, @RequestBody String rating) {
+    public ResponseEntity<Destination> addReview(@PathVariable Long id, @RequestBody Double rating) {
         Destination updated = destinationService.addReview(id, rating);
         if (updated == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
