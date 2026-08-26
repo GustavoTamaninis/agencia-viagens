@@ -29,18 +29,40 @@ public class DestinationService {
         return destination;
     }
 
-    public Destination updateDestination(Long id, Destination destinationDetails) {
-        // 1. Busca o destino na lista
+    public Destination updateDestination(Long id, Destination updatedDestination) {
         Destination destination = getDestinationById(id);
 
-        // 2. Garante que só altera se o objeto realmente for encontrado
-        if (destination != null) {
-            destination.setName(destinationDetails.getName());
-            destination.setLocate(destinationDetails.getLocate());
-            destination.setDescription(destinationDetails.getDescription());
+        if (destination == null) {
+            return null;
         }
 
-        // 3. Retorna o objeto atualizado (ou null se não encontrou)
+        // Atualização de dados básicos
+        if (updatedDestination.getName() != null) {
+            destination.setName(updatedDestination.getName());
+        }
+        if (updatedDestination.getLocate() != null) {
+            destination.setLocate(updatedDestination.getLocate());
+        }
+        if (updatedDestination.getDescription() != null) {
+            destination.setDescription(updatedDestination.getDescription());
+        }
+
+        // Atualização dos demais campos da entidade
+        if (updatedDestination.getTravelPackets() != null) {
+            destination.setTravelPackets(updatedDestination.getTravelPackets());
+        }
+        if (updatedDestination.getHotelAvailability() != null) {
+            destination.setHotelAvailability(updatedDestination.getHotelAvailability());
+        }
+        if (updatedDestination.getTouristActivities() != null) {
+            destination.setTouristActivities(updatedDestination.getTouristActivities());
+        }
+
+        // Atualização da lista de avaliações
+        if (updatedDestination.getReviews() != null) {
+            destination.setReviews(new ArrayList<>(updatedDestination.getReviews()));
+        }
+
         return destination;
     }
 
