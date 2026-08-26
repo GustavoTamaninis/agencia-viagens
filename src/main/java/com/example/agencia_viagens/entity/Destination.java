@@ -1,7 +1,7 @@
 package com.example.agencia_viagens.entity;
 
 import java.util.List;
-
+@SuppressWarnings("unused")
 public class Destination {
     private Long id;
     private String name;
@@ -10,7 +10,7 @@ public class Destination {
     private Boolean hotelAvailability; // Escolhemos usar um tipo de referência, pois o valor pode ser nulo.
     private String description;
     private String touristActivities;
-    private List<String> reviews; // Usamos uma Lista, porque Arrays no Java não são dinâmicos.
+    private List<Double> reviews; // Usamos uma Lista, porque Arrays no Java não são dinâmicos.
 
     public Long getId() {
         return id;
@@ -68,11 +68,30 @@ public class Destination {
         this.touristActivities = touristActivities;
     }
 
-    public List<String> getReviews() {
+    public List<Double> getReviews() {
         return reviews;
     }
 
-    public void setReviews(List<String> reviews) {
+    public void setReviews(List<Double> reviews) {
         this.reviews = reviews;
+    }
+
+    public Double getAverage() {
+        if (this.reviews == null || this.reviews.isEmpty()) {
+            return 0.0;
+        }
+        double sum = 0.0;
+        int count = 0;
+        for (Double review : this.reviews) {
+            if (review != null) {
+                sum += review;
+                count++;
+            }
+        }
+        if (count == 0) {
+            return 0.0;
+        }
+        double average = sum / count;
+        return Math.round(average * 100.0) / 100.0;
     }
 }
