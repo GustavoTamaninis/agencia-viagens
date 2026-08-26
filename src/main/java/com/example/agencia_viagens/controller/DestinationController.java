@@ -28,6 +28,11 @@ public class DestinationController {
         Destination destination = destinationService.getDestinationById(id);
         return new ResponseEntity<>(destination, HttpStatus.OK);
     }
+    @GetMapping("/search")
+    public ResponseEntity<List<Destination>> searchDestinations(@RequestParam String search) {
+    List<Destination> destinations = destinationService.findByNameOrLocate(search);
+    return new ResponseEntity<>(destinations, HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<Destination> createDestination(@RequestBody Destination destination) {
