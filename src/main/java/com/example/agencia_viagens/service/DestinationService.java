@@ -12,17 +12,26 @@ public class DestinationService {
 
     private ArrayList<Destination> destinations = new ArrayList<Destination>();
 
-    public List<Destination> getAllDestinations(){
+    public List<Destination> getAllDestinations() {
         return this.destinations;
     }
 
-    public Destination getDestinationById(Long id){
-        Destination destination = destinations.stream().filter(d -> d.getId() == id).findFirst().get();
+    public Destination getDestinationById(Long id) {
+        Destination destination = destinations.stream()
+                .filter(d -> d.getId() == id)
+                .findFirst()
+                .get();
+
         return destination;
     }
 
     public Destination save(Destination destination) {
         destinations.add(destination);
         return destination;
+    }
+
+    
+    public void deleteDestination(Long id) {
+        destinations.removeIf(destination -> destination.getId().equals(id));
     }
 }
