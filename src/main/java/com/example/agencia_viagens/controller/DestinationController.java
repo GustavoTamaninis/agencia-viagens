@@ -10,6 +10,7 @@ import com.example.agencia_viagens.service.DestinationService;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/destinations")
 public class DestinationController {
@@ -18,13 +19,13 @@ public class DestinationController {
     private DestinationService destinationService;
 
     @GetMapping
-    public ResponseEntity<List<Destination>> getAllDestinations() {
+    public ResponseEntity<List<Destination>> getAllDestinations(){
         List<Destination> destinations = destinationService.getAllDestinations();
         return new ResponseEntity<>(destinations, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Destination> getDestinationById(@PathVariable Long id) {
+    public ResponseEntity<Destination> getDestinationById(@PathVariable Long id){ // visualizar detalhes de um destino específico
         Destination destination = destinationService.getDestinationById(id);
         return new ResponseEntity<>(destination, HttpStatus.OK);
     }
@@ -47,10 +48,21 @@ public class DestinationController {
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
-    
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDestination(@PathVariable Long id) {
-        destinationService.deleteDestination(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @PutMapping("/{id}")
+    public ResponseEntity<Destination> updateDestination(@PathVariable Long id, @RequestBody Destination destination) {
+    Destination updated = destinationService.updateDestination(id, destination);
+        if (updated == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updated, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/reviews")
+    public ResponseEntity<Destination> addReview(@PathVariable Long id, @RequestBody Double rating) {
+        Destination updated = destinationService.addReview(id, rating);
+        if (updated == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(updated, HttpStatus.OK);
     }
 }
