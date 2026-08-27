@@ -30,6 +30,18 @@ public class DestinationController {
         return new ResponseEntity<>(destination, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<Destination>> searchDestinations(@RequestParam String search) {
+        List<Destination> destinations = destinationService.getAllDestinations()
+                .stream()
+                .filter(destination ->
+                        destination.getName().toLowerCase().contains(search.toLowerCase()) ||
+                        destination.getLocate().toLowerCase().contains(search.toLowerCase()))
+                .toList();
+
+        return new ResponseEntity<>(destinations, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<Destination> createDestination(@RequestBody Destination destination) {
         Destination saved = destinationService.save(destination);
