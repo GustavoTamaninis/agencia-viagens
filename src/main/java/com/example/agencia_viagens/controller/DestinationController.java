@@ -65,4 +65,15 @@ public class DestinationController {
         }
         return new ResponseEntity<>(updated, HttpStatus.OK);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDestination(@PathVariable Long id) {
+        boolean deleted = destinationService.deleteDestination(id);
+
+        if (!deleted) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

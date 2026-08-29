@@ -80,4 +80,8 @@ public class DestinationService {
         return destination;
     }
 
+    public boolean deleteDestination(Long id) {
+        return destinations.removeIf(destination -> destination.getId() != null && destination.getId().equals(id));
+    }
+
 }
