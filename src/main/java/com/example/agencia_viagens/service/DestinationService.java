@@ -12,6 +12,8 @@ public class DestinationService {
 
     private final ArrayList<Destination> destinations = new ArrayList<>();
 
+    public Long nextId = 1L;
+
     public List<Destination> getAllDestinations(){
         return this.destinations;
     }
@@ -25,6 +27,9 @@ public class DestinationService {
     }
 
     public Destination save(Destination destination) {
+        if(destination.getId() == null){
+            destination.setId(nextId++);
+        }
         destinations.add(destination);
         return destination;
     }
