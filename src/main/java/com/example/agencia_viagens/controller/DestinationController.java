@@ -27,6 +27,9 @@ public class DestinationController {
     @GetMapping("/{id}")
     public ResponseEntity<Destination> getDestinationById(@PathVariable Long id){ // visualizar detalhes de um destino específico
         Destination destination = destinationService.getDestinationById(id);
+        if(destination == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(destination, HttpStatus.OK);
     }
 
