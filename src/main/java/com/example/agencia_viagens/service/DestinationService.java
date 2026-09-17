@@ -3,90 +3,89 @@ package com.example.agencia_viagens.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.agencia_viagens.entity.DestinationEntity;
 import org.springframework.stereotype.Service;
-
-import com.example.agencia_viagens.entity.Destination;
 
 @Service
 public class DestinationService {
 
-    private final ArrayList<Destination> destinations = new ArrayList<>();
+    private final ArrayList<DestinationEntity> destinationEntities = new ArrayList<>();
 
     public Long nextId = 1L;
 
-    public List<Destination> getAllDestinations(){
-        return this.destinations;
+    public List<DestinationEntity> getAllDestinations(){
+        return this.destinationEntities;
     }
 
-    public Destination getDestinationById(Long id){
+    public DestinationEntity getDestinationById(Long id){
         // Garante que d.getId() não é null antes de chamar o .equals()
-        return destinations.stream()
+        return destinationEntities.stream()
                 .filter(d -> d.getId() != null && d.getId().equals(id))
                 .findFirst()
                 .orElse(null);
     }
 
-    public Destination save(Destination destination) {
-        if(destination.getId() == null){
-            destination.setId(nextId++);
+    public DestinationEntity save(DestinationEntity destinationEntity) {
+        if(destinationEntity.getId() == null){
+            destinationEntity.setId(nextId++);
         }
-        destinations.add(destination);
-        return destination;
+        destinationEntities.add(destinationEntity);
+        return destinationEntity;
     }
 
-    public Destination updateDestination(Long id, Destination updatedDestination) {
-        Destination destination = getDestinationById(id);
+    public DestinationEntity updateDestination(Long id, DestinationEntity updatedDestinationEntity) {
+        DestinationEntity destinationEntity = getDestinationById(id);
 
-        if (destination == null) {
+        if (destinationEntity == null) {
             return null;
         }
 
         // Atualização de dados básicos
-        if (updatedDestination.getName() != null) {
-            destination.setName(updatedDestination.getName());
+        if (updatedDestinationEntity.getName() != null) {
+            destinationEntity.setName(updatedDestinationEntity.getName());
         }
-        if (updatedDestination.getLocate() != null) {
-            destination.setLocate(updatedDestination.getLocate());
+        if (updatedDestinationEntity.getLocate() != null) {
+            destinationEntity.setLocate(updatedDestinationEntity.getLocate());
         }
-        if (updatedDestination.getDescription() != null) {
-            destination.setDescription(updatedDestination.getDescription());
+        if (updatedDestinationEntity.getDescription() != null) {
+            destinationEntity.setDescription(updatedDestinationEntity.getDescription());
         }
 
         // Atualização dos demais campos da entidade
-        if (updatedDestination.getTravelPackets() != null) {
-            destination.setTravelPackets(updatedDestination.getTravelPackets());
+        if (updatedDestinationEntity.getTravelPackets() != null) {
+            destinationEntity.setTravelPackets(updatedDestinationEntity.getTravelPackets());
         }
-        if (updatedDestination.getHotelAvailability() != null) {
-            destination.setHotelAvailability(updatedDestination.getHotelAvailability());
+        if (updatedDestinationEntity.getHotelAvailability() != null) {
+            destinationEntity.setHotelAvailability(updatedDestinationEntity.getHotelAvailability());
         }
-        if (updatedDestination.getTouristActivities() != null) {
-            destination.setTouristActivities(updatedDestination.getTouristActivities());
+        if (updatedDestinationEntity.getTouristActivities() != null) {
+            destinationEntity.setTouristActivities(updatedDestinationEntity.getTouristActivities());
         }
 
         // Atualização da lista de avaliações
-        if (updatedDestination.getReviews() != null) {
-            destination.setReviews(new ArrayList<>(updatedDestination.getReviews()));
+        if (updatedDestinationEntity.getReviews() != null) {
+            destinationEntity.setReviews(new ArrayList<>(updatedDestinationEntity.getReviews()));
         }
 
-        return destination;
+        return destinationEntity;
     }
 
-    public Destination addReview(Long id, Double rating) {
-        Destination destination = getDestinationById(id);
+    public DestinationEntity addReview(Long id, Double rating) {
+        DestinationEntity destinationEntity = getDestinationById(id);
 
-        if (destination != null && rating != null) {
-            if (destination.getReviews() == null) {
-                destination.setReviews(new ArrayList<>());
+        if (destinationEntity != null && rating != null) {
+            if (destinationEntity.getReviews() == null) {
+                destinationEntity.setReviews(new ArrayList<>());
             }
 
-            destination.getReviews().add(rating);
+            destinationEntity.getReviews().add(rating);
         }
 
-        return destination;
+        return destinationEntity;
     }
 
     public boolean deleteDestination(Long id) {
-        return destinations.removeIf(destination -> destination.getId() != null && destination.getId().equals(id));
+        return destinationEntities.removeIf(destinationEntity -> destinationEntity.getId() != null && destinationEntity.getId().equals(id));
     }
 
 }

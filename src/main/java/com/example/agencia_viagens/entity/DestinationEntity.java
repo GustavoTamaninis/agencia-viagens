@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class Destination {
+public class DestinationEntity {
     private Long id;
     private String name;
     private String locate;

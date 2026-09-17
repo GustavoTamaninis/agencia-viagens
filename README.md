@@ -38,19 +38,19 @@ Estes frameworks foram utilizados juntamente com o Maven, um gerenciador de depe
 ### Principais Endpoints:
 
 ### Endpoints **GET**:
-- **getAllDestinations:** Retorna ao usuário a lista completa com todos os `Destination` e suas informações. Disponível em `/api/destinations`.
-- **getDestinationById:** Retorna ao usuário o `Destination` e suas informações, cujo `id` seja igual ao que está na URL. Disponível em `/api/destinations/id`.
-- **searchDestinations:** Retorna ao usuário os `Destinations` e suas informações, cujo `Nome` ou `Locate` correspondam ao que está na URL. Disponível em `/api/destinations/search`.
+- **getAllDestinations:** Retorna ao usuário a lista completa com todos os `DestinationEntity` e suas informações. Disponível em `/api/destinationEntities`.
+- **getDestinationById:** Retorna ao usuário o `DestinationEntity` e suas informações, cujo `id` seja igual ao que está na URL. Disponível em `/api/destinationEntities/id`.
+- **searchDestinations:** Retorna ao usuário os `Destinations` e suas informações, cujo `Nome` ou `Locate` correspondam ao que está na URL. Disponível em `/api/destinationEntities/search`.
 
 ### Endpoint **POST**:
-- **createDestination:** Cria um `Destination` e o armazena em memória. Disponível em `/api/destinations`.
+- **createDestination:** Cria um `DestinationEntity` e o armazena em memória. Disponível em `/api/destinationEntities`.
 
 ### Endpoints **PUT**:
-- **updateDestination:**: Edita as informações de um `Destination`. Disponível em `/api/destinations/id`.
-- **addReview**: Adiciona uma avaliação à `Destination` e altera sua média de avaliação. Disponível em `/api/destinations/id/reviews`.
+- **updateDestination:**: Edita as informações de um `DestinationEntity`. Disponível em `/api/destinationEntities/id`.
+- **addReview**: Adiciona uma avaliação à `DestinationEntity` e altera sua média de avaliação. Disponível em `/api/destinationEntities/id/reviews`.
 
 ### Endpoint **DELETE**:
-- **deleteDestination:** Exclui uma `Destination`. Disponível em `/api/destinations/id`.
+- **deleteDestination:** Exclui uma `DestinationEntity`. Disponível em `/api/destinationEntities/id`.
 
 - - -
 
