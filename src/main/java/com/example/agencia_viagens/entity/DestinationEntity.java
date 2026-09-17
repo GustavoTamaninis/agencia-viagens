@@ -1,10 +1,16 @@
 package com.example.agencia_viagens.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
+@Entity
+@Table(name = "destination")
 public class DestinationEntity {
+    @Id
+    @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String locate;
@@ -12,7 +18,8 @@ public class DestinationEntity {
     private Boolean hotelAvailability; // Escolhemos usar um tipo de referência, pois o valor pode ser nulo.
     private String description;
     private String touristActivities;
-    private List<Double> reviews; // Usamos uma Lista, porque Arrays no Java não são dinâmicos.
+    @OneToMany(mappedBy = "destination", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewEntity> reviewEntities = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -71,21 +78,42 @@ public class DestinationEntity {
     }
 
     public List<Double> getReviews() {
-        return reviews;
+        return reviewEntities.stream()
+                .map(ReviewEntity::getRating)
+                .map(value -> value == null ? null : value.doubleValue())
+                .toList();
     }
 
     public void setReviews(List<Double> reviews) {
-        this.reviews = reviews;
+        reviewEntities.clear();
+        if (reviews != null) {
+            reviews.stream()
+                    .map(rating -> {
+                        ReviewEntity review = new ReviewEntity();
+                        review.setRating(rating);
+                        review.setDestination(this);
+                        return review;
+                    })
+                    .forEach(reviewEntities::add);
+        }
+    }
+
+    public void addReview(Double rating) {
+        ReviewEntity review = new ReviewEntity();
+        review.setRating(rating);
+        review.setDestination(this);
+        reviewEntities.add(review);
     }
 
     @JsonProperty("average")
     public Double getAverage() {
-        if (this.reviews == null || this.reviews.isEmpty()) {
+        List<Double> reviews = getReviews();
+        if (reviews.isEmpty()) {
             return 0.0;
         }
         double sum = 0.0;
         int count = 0;
-        for (Double review : this.reviews) {
+        for (Double review : reviews) {
             if (review != null) {
                 sum += review;
                 count++;
