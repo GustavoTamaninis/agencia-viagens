@@ -35,12 +35,7 @@ public class DestinationController {
 
     @GetMapping("/search")
     public ResponseEntity<List<DestinationEntity>> searchDestinations(@RequestParam String search) {
-        List<DestinationEntity> destinationEntities = destinationService.getAllDestinations()
-                .stream()
-                .filter(destinationEntity ->
-                        destinationEntity.getName().toLowerCase().contains(search.toLowerCase()) ||
-                        destinationEntity.getLocate().toLowerCase().contains(search.toLowerCase()))
-                .toList();
+        List<DestinationEntity> destinationEntities = destinationService.searchDestinations(search);
 
         return new ResponseEntity<>(destinationEntities, HttpStatus.OK);
     }

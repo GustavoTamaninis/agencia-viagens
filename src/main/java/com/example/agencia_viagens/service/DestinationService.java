@@ -1,36 +1,34 @@
 package com.example.agencia_viagens.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.example.agencia_viagens.entity.DestinationEntity;
+import com.example.agencia_viagens.repository.DestinationRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DestinationService {
 
-    private final ArrayList<DestinationEntity> destinationEntities = new ArrayList<>();
+    private final DestinationRepository repository;
 
-    public Long nextId = 1L;
+    public DestinationService(DestinationRepository repository) {
+        this.repository = repository;
+    }
 
-    public List<DestinationEntity> getAllDestinations(){
-        return this.destinationEntities;
+    public List<DestinationEntity> getAllDestinations() {
+        return repository.findAll();
     }
 
     public DestinationEntity getDestinationById(Long id){
-        // Garante que d.getId() não é null antes de chamar o .equals()
-        return destinationEntities.stream()
-                .filter(d -> d.getId() != null && d.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return repository.findById(id).orElse(null);
     }
 
     public DestinationEntity save(DestinationEntity destinationEntity) {
-        if(destinationEntity.getId() == null){
-            destinationEntity.setId(nextId++);
-        }
-        destinationEntities.add(destinationEntity);
-        return destinationEntity;
+        return repository.save(destinationEntity);
+    }
+
+    public List<DestinationEntity> searchDestinations(String search) {
+        return repository.findByNameContainingIgnoreCaseOrLocateContainingIgnoreCase(search, search);
     }
 
     public DestinationEntity updateDestination(Long id, DestinationEntity updatedDestinationEntity) {
@@ -64,28 +62,30 @@ public class DestinationService {
 
         // Atualização da lista de avaliações
         if (updatedDestinationEntity.getReviews() != null) {
-            destinationEntity.setReviews(new ArrayList<>(updatedDestinationEntity.getReviews()));
+            destinationEntity.setReviews(updatedDestinationEntity.getReviews());
         }
 
-        return destinationEntity;
+        return repository.save(destinationEntity);
     }
 
     public DestinationEntity addReview(Long id, Double rating) {
         DestinationEntity destinationEntity = getDestinationById(id);
 
         if (destinationEntity != null && rating != null) {
-            if (destinationEntity.getReviews() == null) {
-                destinationEntity.setReviews(new ArrayList<>());
-            }
-
-            destinationEntity.getReviews().add(rating);
+            destinationEntity.addReview(rating);
+            return repository.save(destinationEntity);
         }
 
         return destinationEntity;
     }
 
     public boolean deleteDestination(Long id) {
-        return destinationEntities.removeIf(destinationEntity -> destinationEntity.getId() != null && destinationEntity.getId().equals(id));
+        if (!repository.existsById(id)) {
+            return false;
+        }
+
+        repository.deleteById(id);
+        return true;
     }
 
 }
