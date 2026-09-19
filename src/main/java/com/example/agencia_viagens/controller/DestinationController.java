@@ -1,7 +1,6 @@
 package com.example.agencia_viagens.controller;
 
-import com.example.agencia_viagens.entity.DestinationEntity;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.agencia_viagens.dto.DestinationDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,40 +14,42 @@ import java.util.List;
 @RequestMapping("/api/destinations")
 public class DestinationController {
 
-    @Autowired
-    private DestinationService destinationService;
+    private final DestinationService destinationService;
+
+    public DestinationController(DestinationService destinationService) {
+        this.destinationService = destinationService;
+    }
 
     @GetMapping
-    public ResponseEntity<List<DestinationEntity>> getAllDestinations(){
-        List<DestinationEntity> destinationEntities = destinationService.getAllDestinations();
-        return new ResponseEntity<>(destinationEntities, HttpStatus.OK);
+    public ResponseEntity<List<DestinationDTO>> getAllDestinations() {
+        return new ResponseEntity<>(destinationService.getAllDestinations(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DestinationEntity> getDestinationById(@PathVariable Long id){ // visualizar detalhes de um destino específico
-        DestinationEntity destinationEntity = destinationService.getDestinationById(id);
-        if(destinationEntity == null){
+    public ResponseEntity<DestinationDTO> getDestinationById(@PathVariable Long id) {
+        DestinationDTO destinationDTO = destinationService.getDestinationById(id);
+        if (destinationDTO == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(destinationEntity, HttpStatus.OK);
+        return new ResponseEntity<>(destinationDTO, HttpStatus.OK);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<DestinationEntity>> searchDestinations(@RequestParam String search) {
-        List<DestinationEntity> destinationEntities = destinationService.searchDestinations(search);
-
-        return new ResponseEntity<>(destinationEntities, HttpStatus.OK);
+    public ResponseEntity<List<DestinationDTO>> searchDestinations(@RequestParam String search) {
+        return new ResponseEntity<>(destinationService.searchDestinations(search), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<DestinationEntity> createDestination(@RequestBody DestinationEntity destinationEntity) {
-        DestinationEntity saved = destinationService.save(destinationEntity);
+    public ResponseEntity<DestinationDTO> createDestination(@RequestBody DestinationDTO destinationDTO) {
+        DestinationDTO saved = destinationService.save(destinationDTO);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DestinationEntity> updateDestination(@PathVariable Long id, @RequestBody DestinationEntity destinationEntity) {
-    DestinationEntity updated = destinationService.updateDestination(id, destinationEntity);
+    public ResponseEntity<DestinationDTO> updateDestination(
+            @PathVariable Long id,
+            @RequestBody DestinationDTO destinationDTO) {
+        DestinationDTO updated = destinationService.updateDestination(id, destinationDTO);
         if (updated == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -56,8 +57,8 @@ public class DestinationController {
     }
 
     @PutMapping("/{id}/reviews")
-    public ResponseEntity<DestinationEntity> addReview(@PathVariable Long id, @RequestBody Double rating) {
-        DestinationEntity updated = destinationService.addReview(id, rating);
+    public ResponseEntity<DestinationDTO> addReview(@PathVariable Long id, @RequestBody Double rating) {
+        DestinationDTO updated = destinationService.addReview(id, rating);
         if (updated == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
