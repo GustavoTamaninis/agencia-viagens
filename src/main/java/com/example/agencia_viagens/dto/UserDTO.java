@@ -1,15 +1,15 @@
-package com.example.agencia_viagens.entity;
+package com.example.agencia_viagens.dto;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity
-@Table(name = "users")
-public class UserEntity {
-    @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+public class UserDTO {
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
+
     private String username;
     private String email;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     public Long getId() {
