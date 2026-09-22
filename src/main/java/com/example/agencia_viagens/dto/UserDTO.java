@@ -12,6 +12,10 @@ public class UserDTO {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    // Somente leitura: cadastro público não pode escolher a própria role.
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private String role;
+
     public Long getId() {
         return id;
     }
@@ -42,5 +46,13 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
