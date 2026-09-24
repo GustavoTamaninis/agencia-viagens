@@ -1,87 +1,325 @@
-# 🧳 Agência de Viagens - API REST
-Projeto de uma API REST para uma agência de viagens fictícia.
+# ✈️ Agência de Viagens - API REST
+
+Projeto de uma API REST para uma agência de viagens.
 
 ---
 
-## 🔍 Visão Geral do Problema
+## 🔍 Sobre o Projeto
 
-Uma agência de viagens que está modernizando seus serviços digitais já possui um site institucional e um sistema interno de reservas, mas deseja ampliar sua atuação por meio de uma API REST que permita a integração com aplicativos de turismo, parceiros comerciais e futuras plataformas digitais.
+O **Agência de Viagens API REST** é um projeto desenvolvido em **Java** utilizando **Spring Boot**.
 
-Assim, ela solicitou uma primeira versão funcional de uma API.
+A ideia do projeto é criar uma API para uma agência de viagens, permitindo o cadastro e gerenciamento de destinos turísticos e usuários.
 
-A agência trabalha com informações sobre destinos turísticos, pacotes de viagem, disponibilidade de hotéis, localização, descrição dos destinos, avaliações e atividades turísticas. Neste primeiro momento, o sistema não precisa estar integrado a um banco de dados real nem possuir mecanismos avançados de segurança. O foco será a definição da arquitetura da solução, a organização do projeto e a construção dos endpoints principais da API.
-
----
-
-## Arquitetura Proposta
-Este projeto é uma API que segue os princípios REST para lidar com as solicitações GET, POST, PUT e DELETE. Além disso, é estruturado em quatro camadas distintas:
-- **Controller:** Responsável por receber as solicitações do cliente e respondê-las, utilizando os métodos contidos na camada Service;
-- **Service:** É onde se realiza a lógica de negócio, através da manipulação da entidade;
-- **Entity:** Representa a entidade de Destination;
-- **Repository:** Futuramente conterá o relacionamento com Banco de Dados.
+Através da API é possível cadastrar, consultar, alterar e excluir destinos, pesquisar destinos pelo nome ou localização e registrar avaliações.
 
 ---
 
-## 📌 Principais Decisões Tomadas
-### Justificativa da Linguagem:
-Java foi escolhida por ser uma linguagem de programação de forte tipagem muito bem estabelecida no mercado de trabalho.
-### Frameworks Escolhidos:
-- Spring: O framework mais popular do ecossistema Java. Possui Inversão de Controle e Injeção de Dependência.
-- Spring Web: Voltado à construção de sistemas WEB.
+## 🛠️ Tecnologias Utilizadas
 
-Estes frameworks foram utilizados juntamente com o Maven, um gerenciador de dependências do ecossistema Java.
+- ☕ Java
+- 🍃 Spring Boot
+- 🌐 Spring Web
+- 💾 Spring Data JPA
+- 🔐 Spring Security
+- 🐘 PostgreSQL
+- 🗃️ Flyway
+- 📦 Maven
 
 ---
 
-## 🛠️ Estrutura Geral da Aplicação
+## 🏗️ Organização do Projeto
 
-### Principais Endpoints:
+O projeto foi separado em camadas para manter o código organizado.
 
-### Endpoints **GET**:
-- **getAllDestinations:** Retorna ao usuário a lista completa com todos os `DestinationEntity` e suas informações. Disponível em `/api/destinationEntities`.
-- **getDestinationById:** Retorna ao usuário o `DestinationEntity` e suas informações, cujo `id` seja igual ao que está na URL. Disponível em `/api/destinationEntities/id`.
-- **searchDestinations:** Retorna ao usuário os `Destinations` e suas informações, cujo `Nome` ou `Locate` correspondam ao que está na URL. Disponível em `/api/destinationEntities/search`.
+- **Controller:** responsável pelas rotas e requisições da API.
+- **Service:** onde ficam as regras e operações do sistema.
+- **Repository:** responsável pelo acesso ao banco de dados.
+- **Entity:** representa as entidades utilizadas no banco.
+- **DTO:** utilizado para receber e retornar os dados da aplicação.
 
-### Endpoint **POST**:
-- **createDestination:** Cria um `DestinationEntity` e o armazena em memória. Disponível em `/api/destinationEntities`.
+As principais entidades utilizadas são:
 
-### Endpoints **PUT**:
-- **updateDestination:**: Edita as informações de um `DestinationEntity`. Disponível em `/api/destinationEntities/id`.
-- **addReview**: Adiciona uma avaliação à `DestinationEntity` e altera sua média de avaliação. Disponível em `/api/destinationEntities/id/reviews`.
+- `Destination`
+- `User`
+- `Review`
 
-### Endpoint **DELETE**:
-- **deleteDestination:** Exclui uma `DestinationEntity`. Disponível em `/api/destinationEntities/id`.
+---
 
-- - -
+## 🔐 Regras de Acesso
 
-## ⚙️ Como Executar o Projeto
+A API utiliza **Spring Security** para controlar o acesso às rotas.
 
-### Pré-requisitos
-* **JAVA** instalado na máquina (versão 25 ou superior)**.
+Algumas rotas podem ser acessadas livremente, enquanto outras precisam de autenticação ou permissão de administrador.
 
-### Passo a Passo
+### 🔑 Autenticação
 
-1. **Clone este repositório:**
-```bash
-  git clone https://github.com/GustavoTamaninis/agencia-viagens.git
+Para acessar as rotas protegidas, primeiro é necessário realizar o login.
+
+A autenticação é feita através da rota:
+
+`POST /auth/login`
+
+Nessa requisição são enviados os dados de login do usuário.
+
+Depois de autenticado, o usuário poderá acessar as rotas permitidas de acordo com seu nível de acesso.
+
+Para realizar operações que exigem autenticação, como adicionar uma avaliação em um destino, o usuário precisa estar logado.
+
+### 🚦 Acesso às Rotas
+
+| Método | Rota | Acesso |
+|---|---|---|
+| POST | `/auth/login` | Público |
+| GET | `/api/destinations` | Público |
+| GET | `/api/destinations/{id}` | Público |
+| GET | `/api/destinations/search?search={termo}` | Público |
+| PUT | `/api/destinations/{id}/reviews` | Usuário autenticado |
+| POST | `/api/destinations` | ADMIN |
+| PUT | `/api/destinations/{id}` | ADMIN |
+| DELETE | `/api/destinations/{id}` | ADMIN |
+
+As rotas de consulta podem ser acessadas sem login.
+
+Para adicionar uma avaliação, o usuário precisa estar autenticado.
+
+As operações de cadastro, alteração e exclusão de destinos são restritas ao administrador.
+
+As configurações de autenticação e autorização ficam no `SecurityConfig.java`.
+
+---
+
+## 🌎 Destinos
+
+A rota principal utilizada para os destinos é:
+
+`/api/destinations`
+
+### 📋 Listar Todos os Destinos
+
+`GET /api/destinations`
+
+Retorna todos os destinos cadastrados no sistema.
+
+### 🔎 Buscar Destino por ID
+
+`GET /api/destinations/{id}`
+
+Exemplo:
+
+`GET /api/destinations/1`
+
+Busca um destino específico pelo seu ID.
+
+### 🔍 Buscar Destino por Nome ou Localização
+
+`GET /api/destinations/search?search={termo}`
+
+Exemplo:
+
+`GET /api/destinations/search?search=Paris`
+
+A busca pode ser feita utilizando o nome ou a localização do destino.
+
+### ➕ Cadastrar Destino
+
+`POST /api/destinations`
+
+Cadastra um novo destino no sistema.
+
+Essa operação é permitida somente para usuários com acesso de **ADMIN**.
+
+### ✏️ Atualizar Destino
+
+`PUT /api/destinations/{id}`
+
+Atualiza os dados de um destino já cadastrado.
+
+Essa operação é permitida somente para usuários com acesso de **ADMIN**.
+
+### ⭐ Adicionar Avaliação
+
+`PUT /api/destinations/{id}/reviews`
+
+Adiciona uma avaliação ao destino informado.
+
+Para utilizar essa rota, o usuário precisa estar autenticado. Qualquer usuário autenticado pode adicionar uma avaliação, não sendo necessário possuir acesso de administrador.
+
+### 🗑️ Excluir Destino
+
+`DELETE /api/destinations/{id}`
+
+Exclui um destino pelo ID informado.
+
+Essa operação é permitida somente para usuários com acesso de **ADMIN**.
+
+---
+
+## 👤 Usuários
+
+A rota principal utilizada para usuários é:
+
+`/users`
+
+### 📋 Listar Usuários
+
+`GET /users`
+
+Retorna os usuários cadastrados.
+
+### 🔎 Buscar Usuário por ID
+
+`GET /users/{id}`
+
+Busca um usuário específico pelo seu ID.
+
+### ➕ Cadastrar Usuário
+
+`POST /users`
+
+Cadastra um novo usuário.
+
+### ✏️ Atualizar Usuário
+
+`PUT /users/{id}`
+
+Atualiza os dados de um usuário já cadastrado.
+
+### 🗑️ Excluir Usuário
+
+`DELETE /users/{id}`
+
+Exclui um usuário pelo ID informado.
+
+---
+
+## 🗄️ Banco de Dados
+
+O projeto utiliza **PostgreSQL** como banco de dados.
+
+Para executar a aplicação, é necessário criar e configurar o banco de dados com as mesmas informações definidas no arquivo:
+
+`src/main/resources/application.properties`
+
+No projeto, os dados de conexão utilizados são:
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/agencia-viagens
+spring.datasource.username=postgres
+spring.datasource.password=postgres
 ```
-2. **Entre na pasta:**
+
+Ao criar a conexão em um gerenciador de PostgreSQL, como **pgAdmin** ou **DBeaver**, devem ser utilizados os mesmos dados:
+
+- **Host:** `localhost`
+- **Porta:** `5432`
+- **Banco de dados:** `agencia-viagens`
+- **Usuário:** `postgres`
+- **Senha:** `postgres`
+
+> ⚠️ **Importante:** o banco e a conexão devem ser criados com as mesmas informações definidas no `application.properties` para que a aplicação consiga se conectar corretamente.
+
+---
+
+## 🗃️ Flyway
+
+O projeto utiliza **Flyway** para controlar a criação e as alterações das tabelas do banco de dados.
+
+Os arquivos de migration ficam em:
+
+`src/main/resources/db/migration`
+
+---
+
+## ▶️ Como Executar o Projeto
+
+Para executar o projeto é necessário ter instalado:
+
+- ☕ Java
+- 🐘 PostgreSQL
+
+Com o PostgreSQL instalado, crie e configure a conexão utilizando as mesmas informações presentes no `application.properties`.
+
+Para a configuração atual do projeto, devem ser utilizados:
+
+- **Host:** `localhost`
+- **Porta:** `5432`
+- **Banco:** `agencia-viagens`
+- **Usuário:** `postgres`
+- **Senha:** `postgres`
+
+Depois de criar o banco e configurar a conexão com essas informações, o projeto pode ser iniciado.
+
+### 🪟 Executar no Windows
+
 ```bash
-  cd agencia-viagens
+mvnw.cmd spring-boot:run
 ```
-3. **Execute:**
-- No Windows:
 
-  ```bash
-  mvnw.cmd spring-boot:run
-  ```
-- No Linux/macOS:
+### 🐧 Executar no Linux ou macOS
 
-  ```bash
-  ./mvnw spring-boot:run
-  ```
-4. A API ficará disponível em:
-    http://localhost:8080
+```bash
+./mvnw spring-boot:run
+```
+
+Depois que o projeto iniciar, a API ficará disponível em:
+
+`http://localhost:8080`
+
+---
+
+## ⚙️ Funcionalidades
+
+O projeto possui as seguintes funcionalidades:
+
+1. Cadastro de destinos;
+2. Consulta dos destinos cadastrados;
+3. Busca de destino por ID;
+4. Busca de destinos por nome ou localização;
+5. Alteração de destinos;
+6. Exclusão de destinos;
+7. Avaliação de destinos;
+8. Cadastro de usuários;
+9. Consulta de usuários;
+10. Alteração de usuários;
+11. Exclusão de usuários;
+12. Autenticação de usuários;
+13. Controle de acesso às rotas.
+
+---
+
+## 🛡️ Resumo das Permissões
+
+O sistema possui três situações de acesso:
+
+### 🌐 Público
+
+Pode consultar e pesquisar destinos e acessar a rota de login.
+
+### 👤 Usuário Autenticado
+
+Além das rotas públicas, pode adicionar avaliações aos destinos.
+
+### 👑 ADMIN
+
+Possui acesso às operações administrativas, como cadastrar, alterar e excluir destinos.
+
+---
+
+## 📝 Considerações Finais
+
+O projeto **Agência de Viagens API REST** foi desenvolvido para colocar em prática os conteúdos estudados sobre desenvolvimento de APIs utilizando Java e Spring Boot.
+
+Durante o desenvolvimento foram utilizados conceitos de:
+
+- API REST;
+- CRUD;
+- Arquitetura em camadas;
+- Banco de dados;
+- Spring Data JPA;
+- DTOs;
+- Flyway;
+- Autenticação;
+- Controle de acesso com Spring Security.
 
 
 
