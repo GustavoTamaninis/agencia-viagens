@@ -1,0 +1,30 @@
+package com.example.agencia_viagens.security;
+
+import com.example.agencia_viagens.entity.UserEntity;
+import com.example.agencia_viagens.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+// Usado só no login: o AuthenticationManager chama isso pra conferir usuário/senha.
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
+
+        return User.withUsername(user.getUsername())
+                .password(user.getPassword())
+                .authorities(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
+                .build();
+    }
+}
