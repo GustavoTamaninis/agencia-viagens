@@ -4,6 +4,7 @@ import com.example.agencia_viagens.dto.UserDTO;
 import com.example.agencia_viagens.entity.UserEntity;
 import com.example.agencia_viagens.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<UserDTO> findAll() {
         return userRepository.findAll().stream()
@@ -28,6 +32,7 @@ public class UserService {
 
     public UserDTO save(UserDTO userDTO) {
         UserEntity user = toEntity(userDTO);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         UserEntity savedUser = userRepository.save(user);
         return toDTO(savedUser);
     }
@@ -41,7 +46,7 @@ public class UserService {
 
         // Atualiza a senha apenas se ela foi enviada na requisição
         if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
-            user.setPassword(userDetails.getPassword());
+            user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         }
 
         UserEntity updatedUser = userRepository.save(user);
@@ -58,6 +63,7 @@ public class UserService {
         dto.setId(entity.getId());
         dto.setUsername(entity.getUsername());
         dto.setEmail(entity.getEmail());
+        dto.setRole(entity.getRole());
         // A senha não vai para o DTO de resposta por causa do WRITE_ONLY, mas podemos setar se necessário
         return dto;
     }

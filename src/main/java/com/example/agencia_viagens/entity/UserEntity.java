@@ -12,6 +12,9 @@ public class UserEntity {
     private String email;
     private String password;
 
+    // Todo cadastro público nasce como USER; só a migration cria um ADMIN.
+    private String role = "USER";
+
     public Long getId() {
         return id;
     }
@@ -42,5 +45,13 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
